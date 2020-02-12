@@ -1,0 +1,58 @@
+version: '3'
+services:
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    networks:
+      - app-network
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      SERVICE_NAME: backend
+      SERVICE_TAGS: development
+    ports:
+      - "3088:80"
+    volumes:
+      - /var/www/html/storage
+      - ./backend:/var/www/html:cached
+    networks:
+      - app-network
+
+  # DB Service
+  db:
+    image: mysql:5.7
+    restart: always
+    tty: true
+    ports:
+      - "33036:3306"
+    environment:
+      LC_ALL: C.UTF-8
+      MYSQL_DATABASE: daylongitude
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+# Docker Networks
+networks:
+  app-network:
+    driver: bridge

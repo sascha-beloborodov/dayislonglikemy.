@@ -1,0 +1,4 @@
+- [ ] Google maps
+- [ ] Compire several cities
+- [ ] Docker - front/back/db
+- [ ] Better design (no)
